@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  
+<!-- Mirrored from digitonaut.com/art/uncolor/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Feb 2023 04:30:34 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+  <meta charset='utf-8'\>
+<meta name='apple-mobile-web-app-capable' content='yes'><meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'><title>Uncolor</title>
+
+    <style type="text/css">
+      body {
+        background-color: #333333;
+        margin: 0px;
+        overflow: hidden;
+      }
+      #container {
+        width: 1003px;
+        margin-top: 50px;
+        margin-left: -501px;
+        left: 50%;
+        position: absolute;
+      }
+      #canvas {
+        background: #000;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="requestAnimationFrame.min.js"></script>
+    
+    <script src="proton.min.js"></script>
+    <script>
+      var canvas;
+      var context;
+      var proton;
+      var renderer;
+      var emitter;
+     // var stats;
+      var colors;
+
+      main();
+
+      function main() {
+        colors = [
+          "#529B88",
+          "#CDD180",
+          "#FFFA32",
+          "#FB6255",
+          "#FB4A53",
+          "#FF4E50",
+          "#F9D423"
+        ];
+
+        initCanvas();
+        createProton();
+        tick();
+      }
+
+      function initCanvas() {
+        canvas = document.getElementById("canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        context = canvas.getContext("2d");
+        context.globalCompositeOperation = "darker";
+      }
+      function createProton() {
+        proton = new Proton();
+        emitter = new Proton.Emitter();
+        emitter.rate = new Proton.Rate(
+          new Proton.Span(5, 8),
+          new Proton.Span(0.05, 0.2)
+        );
+
+        emitter.addInitialize(new Proton.Mass(1));
+        emitter.addInitialize(new Proton.Radius(20, 200));
+        emitter.addInitialize(new Proton.Life(2, 4));
+        emitter.addInitialize(
+          new Proton.Position(
+            new Proton.RectZone(0, 0, canvas.width, canvas.height)
+          )
+        );
+
+        emitter.addBehaviour(
+          new Proton.Alpha(0, 1, Infinity, Proton.easeOutCubic)
+        );
+        emitter.addBehaviour(
+          new Proton.Scale(1, 0, Infinity, Proton.easeOutCubic)
+        );
+        emitter.addBehaviour(new Proton.Color(colors, "random"));
+
+        emitter.emit();
+        proton.addEmitter(emitter);
+
+        renderer = new Proton.CanvasRenderer(canvas);
+        proton.addRenderer(renderer);
+        //emitter.preEmit(2);
+      }
+
+      function tick() {
+        requestAnimationFrame(tick);
+
+        //stats.begin();
+        proton.update();
+        //proton.stats.update(1);
+        //stats.end();
+      }
+    </script>
+  </body>
+
+<!-- Mirrored from digitonaut.com/art/uncolor/ by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 17 Feb 2023 04:30:35 GMT -->
+</html>
